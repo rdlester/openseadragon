@@ -498,6 +498,7 @@ function updateLevel( drawer, haveDrawn, drawLevel, level, levelOpacity, levelVi
         tileTL,
         tileBR,
         numberOfTiles,
+        tileIterator,
         viewportCenter  = drawer.viewport.pixelFromPoint( drawer.viewport.getCenter() );
 
 
@@ -547,15 +548,17 @@ function updateLevel( drawer, haveDrawn, drawLevel, level, levelOpacity, levelVi
     }
 
     // Iterate through region and update tiles
-    // TODO: change iteration order to start at center and spiral out
-    for ( x = tileTL.x; x <= tileBR.x; x++ ) {
-        for ( y = tileTL.y; y <= tileBR.y; y++ ) {
-
-            best = updateTile(
+    tileIterator = new $.SpiralIterator({
+        topLeft: tileTL,
+        bottomRight: tileBR,
+    });
+    while ( tileIterator.active ) {
+        best = updateTile(
                 drawer,
                 drawLevel,
                 haveDrawn,
-                x, y,
+                tileIterator.currentX,
+                tileIterator.currentY,
                 level,
                 levelOpacity,
                 levelVisibility,
@@ -563,11 +566,10 @@ function updateLevel( drawer, haveDrawn, drawLevel, level, levelOpacity, levelVi
                 numberOfTiles,
                 currentTime,
                 best
-            );
-
-        }
+                );
+        tileIterator.step();
     }
-
+    
     return best;
 }
 

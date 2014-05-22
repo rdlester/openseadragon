@@ -71,7 +71,7 @@ $.SpiralIterator = function( options ) {
 };
 
 $.SpiralIterator.prototype = {
-    
+
     /**
      * Increments to next location in spiral within bounds
      * @method
@@ -80,43 +80,43 @@ $.SpiralIterator.prototype = {
         // Perform step
         this.currentStep += 1;
         switch(this.dir) {
-        case 0:
-            this.currentX += 1;
-            break;
-        case 1:
-            this.currentY -= 1;
-            break;
-        case 2:
-            this.currentX -= 1;
-            break;
-        case 3:
-            this.currentY += 1;
-            break;
-        default:
-            // throw error
+            case 0:
+                this.currentX += 1;
+                break;
+            case 1:
+                this.currentY -= 1;
+                break;
+            case 2:
+                this.currentX -= 1;
+                break;
+            case 3:
+                this.currentY += 1;
+                break;
+            default:
+                // throw error
         }
 
         // check bounds with helper method
         checkBounds( this );
-                
+
         // If we've performed all the steps in the current segment
         if (this.currentStep === this.segmentLength) {
             // Increment spiral bounds
             switch (this.dir) {
-            case 0:
-                this.spiralRight += 1;
-                break;
-            case 1:
-                this.spiralTop -= 1;
-                break;
-            case 2:
-                this.spiralLeft -= 1;
-                break;
-            case 3:
-                this.spiralBottom += 1;
-                break;
-            default:
-                // throw error
+                case 0:
+                    this.spiralRight += 1;
+                    break;
+                case 1:
+                    this.spiralTop -= 1;
+                    break;
+                case 2:
+                    this.spiralLeft -= 1;
+                    break;
+                case 3:
+                    this.spiralBottom += 1;
+                    break;
+                default:
+                    // throw error
             }
 
             // Begin a new segment
@@ -157,6 +157,7 @@ $.SpiralIterator.prototype = {
  * @private
  * @param {OpenSeadragon.SpiralIterator} iterator
  */
+// TODO: reset currentStep and segmentLength!!!
 function checkBounds( iterator ) {
     var boundsFailures = 0;
     while ( iterator.currentX < iterator.left ||
@@ -170,38 +171,34 @@ function checkBounds( iterator ) {
                 }
 
                 // loop to next potentially open spot
-                if (iterator.currentX > iterator.right &&
-                        (iterator.dir === 0 || iterator.dir === 1)) {
-                            iterator.currentX = iterator.right;
-                            iterator.currentY = iterator.spiralTop - 1;
-                            iterator.spiralTop = Math.max(iterator.top,
-                                                          iterator.spiralTop-1);
-                            iterator.dir = 2;
-                        }
-                if (iterator.currentY < iterator.top &&
-                        (iterator.dir === 1 || iterator.dir === 2)) {
-                            iterator.currentX = iterator.spiralLeft - 1;
-                            iterator.currentY = iterator.top;
-                            iterator.spiralLeft = Math.max(iterator.left,
-                                                           iterator.spiralLeft-1);
-                            iterator.dir = 3;
-                        }
-                if (iterator.currentX < iterator.left &&
-                        (iterator.dir === 2 || iterator.dir === 3)) {
-                            iterator.currentX = iterator.left;
-                            iterator.currentY = iterator.spiralBottom + 1;
-                            iterator.spiralBottom = Math.min(iterator.bottom,
-                                                             iterator.spiralBottom+1);
-                            iterator.dir = 0;
-                        }
-                if (iterator.currentY > iterator.bottom &&
-                        (iterator.dir === 3 || iterator.dir === 0)) {
-                            iterator.currentX = iterator.spiralRight + 1;
-                            iterator.currentY = iterator.bottom;
-                            iterator.spiralRight = Math.min(iterator.right,
-                                                            iterator.spiralRight+1);
-                            iterator.dir = 1;
-                        }
+                if (iterator.currentX > iterator.right) {
+                    iterator.currentX = iterator.right;
+                    iterator.currentY = iterator.spiralTop - 1;
+                    iterator.spiralTop = Math.max(iterator.top,
+                            iterator.spiralTop-1);
+                    iterator.dir = 2;
+                }
+                else if (iterator.currentY < iterator.top) {
+                    iterator.currentX = iterator.spiralLeft - 1;
+                    iterator.currentY = iterator.top;
+                    iterator.spiralLeft = Math.max(iterator.left,
+                            iterator.spiralLeft-1);
+                    iterator.dir = 3;
+                }
+                else if (iterator.currentX < iterator.left) {
+                    iterator.currentX = iterator.left;
+                    iterator.currentY = iterator.spiralBottom + 1;
+                    iterator.spiralBottom = Math.min(iterator.bottom,
+                            iterator.spiralBottom+1);
+                    iterator.dir = 0;
+                }
+                else if (iterator.currentY > iterator.bottom) {
+                    iterator.currentX = iterator.spiralRight + 1;
+                    iterator.currentY = iterator.bottom;
+                    iterator.spiralRight = Math.min(iterator.right,
+                            iterator.spiralRight+1);
+                    iterator.dir = 1;
+                }
             }
 
 }

@@ -46,6 +46,7 @@ module.exports = function(grunt) {
             "src/displayrectangle.js",
             "src/spring.js",
             "src/imageLoader.js",
+            "src/spiralIterator.js",
             "src/tile.js",
             "src/overlay.js",
             "src/drawer.js",
