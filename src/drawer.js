@@ -531,13 +531,14 @@ function updateLevel( drawer, haveDrawn, drawLevel, level, levelOpacity, levelVi
         });
     }
 
-    //OK, a new drawing so do your calculations
+    // Find the region of tiles to draw
     tileTL    = drawer.source.getTileAtPoint( level, viewportTL );
     tileBR    = drawer.source.getTileAtPoint( level, viewportBR );
     numberOfTiles  = drawer.source.getNumTiles( level );
 
     resetCoverage( drawer.coverage, level );
 
+    // Clip region to bounds of source
     if ( !drawer.wrapHorizontal ) {
         tileBR.x = Math.min( tileBR.x, numberOfTiles.x - 1 );
     }
@@ -545,6 +546,8 @@ function updateLevel( drawer, haveDrawn, drawLevel, level, levelOpacity, levelVi
         tileBR.y = Math.min( tileBR.y, numberOfTiles.y - 1 );
     }
 
+    // Iterate through region and update tiles
+    // TODO: change iteration order to start at center and spiral out
     for ( x = tileTL.x; x <= tileBR.x; x++ ) {
         for ( y = tileTL.y; y <= tileBR.y; y++ ) {
 
@@ -636,10 +639,7 @@ function updateTile( drawer, drawLevel, haveDrawn, x, y, level, levelOpacity, le
         if ( needsUpdate ) {
             drawer.updateAgain = true;
         }
-    } else if ( tile.loading ) {
-        // the tile is already in the download queue
-        // thanks josh1093 for finally translating this typo
-    } else {
+    } else if ( !tile.loading ) {
         best = compareTiles( best, tile );
     }
 

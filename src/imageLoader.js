@@ -143,6 +143,14 @@ $.ImageLoader.prototype = {
            this.jobQueue.push( newJob );
         }
 
+    },
+
+    /**
+     * Clear any unstarted loading jobs out of the queue
+     * @method
+     */
+    clear: function() {
+        this.jobQueue = [];
     }
 };
 
@@ -150,9 +158,9 @@ $.ImageLoader.prototype = {
  * Cleans up ImageJob once completed.
  * @method
  * @private
- * @param loader - ImageLoader used to start job.
- * @param job - The ImageJob that has completed.
- * @param callback - Called once cleanup is finished.
+ * @param {OpenSeadragon.ImageLoader} loader - ImageLoader used to start job.
+ * @param {ImageJob} job - The ImageJob that has completed.
+ * @param {Function} callback - Called once cleanup is finished.
  */
 function completeJob( loader, job, callback ) {
     var nextJob;
