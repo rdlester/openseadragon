@@ -27,8 +27,8 @@ $.SpiralIterator = function( options ) {
         top = (options.topLeft && options.topLeft.x) || 0,
         right = options.bottomRight.x,
         bottom = options.bottomRight.y,
-        currentX = (options.start && options.start.x) || (right - left)/2 + left,
-        currentY = (options.start && options.start.y) || (bottom - top)/2 + top;
+        currentX = (options.start && options.start.x) || Math.floor((right - left)/2) + left,
+        currentY = (options.start && options.start.y) || Math.floor((bottom - top)/2) + top;
 
     $.extend( true, this, {
         // valid region
@@ -96,8 +96,11 @@ $.SpiralIterator.prototype = {
                 // throw error
         }
 
-        // check bounds with helper method
+        // check bounds with helper method and exit early if failed
         checkBounds( this );
+        if (!this.active) {
+            return;
+        }
 
         // If we've performed all the steps in the current segment
         if (this.currentStep === this.segmentLength) {
@@ -173,31 +176,41 @@ function checkBounds( iterator ) {
                 // loop to next potentially open spot
                 if (iterator.currentX > iterator.right) {
                     iterator.currentX = iterator.right;
+                    iterator.spiralRight = iterator.right;
                     iterator.currentY = iterator.spiralTop - 1;
                     iterator.spiralTop = Math.max(iterator.top,
                             iterator.spiralTop-1);
                     iterator.dir = 2;
+                    iterator.segmentLength++;
+                    iterator.currentStep = iterator.segmentLength - (iterator.spiralRight - iterator.spiralLeft - 1);
                 }
                 else if (iterator.currentY < iterator.top) {
                     iterator.currentX = iterator.spiralLeft - 1;
                     iterator.currentY = iterator.top;
+                    iterator.spiralTop = iterator.top;
                     iterator.spiralLeft = Math.max(iterator.left,
                             iterator.spiralLeft-1);
                     iterator.dir = 3;
+                    iterator.currentStep = iterator.segmentLength - (iterator.spiralBottom + 1 - iterator.spiralTop);
                 }
                 else if (iterator.currentX < iterator.left) {
                     iterator.currentX = iterator.left;
+                    iterator.spiralLeft = iterator.left;
                     iterator.currentY = iterator.spiralBottom + 1;
                     iterator.spiralBottom = Math.min(iterator.bottom,
                             iterator.spiralBottom+1);
                     iterator.dir = 0;
+                    iterator.segmentLength++;
+                    iterator.currentStep = iterator.segmentLength - (iterator.spiralRight + 1 - iterator.spiralLeft);
                 }
                 else if (iterator.currentY > iterator.bottom) {
                     iterator.currentX = iterator.spiralRight + 1;
                     iterator.currentY = iterator.bottom;
+                    iterator.spiralBottom = iterator.bottom;
                     iterator.spiralRight = Math.min(iterator.right,
                             iterator.spiralRight+1);
                     iterator.dir = 1;
+                    iterator.currentStep = iterator.segmentLength - (iterator.spiralBottom - iterator.spiralTop - 1);
                 }
             }
 
