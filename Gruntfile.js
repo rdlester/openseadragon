@@ -33,6 +33,7 @@ module.exports = function(grunt) {
             "src/navigator.js",
             "src/strings.js",
             "src/point.js",
+            "src/spiraliterator.js",
             //"src/profiler.js",
             "src/tilesource.js",
             "src/dzitilesource.js",
